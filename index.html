@@ -15,16 +15,48 @@ body{
   background-attachment:fixed;
   color:#fff;
 }
+/* 全局蒙版，压暗背景，文字更清晰 */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 100%);
+  z-index:1;
+}
+
 #password-box{
+  position:relative;
+  z-index:2;
   height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:20px;
+  gap:24px;
+  /* 呼吸动画，Safari兼容 */
+  animation: breathe 4s ease-in-out infinite alternate;
 }
+@keyframes breathe {
+  0%{transform: scale(1);}
+  100%{transform: scale(1.025);}
+}
+
+#password-box .tip-main{
+  font-size:1.3rem;
+  text-align:center;
+  letter-spacing:1px;
+}
+#password-box .tip-sub{
+  font-size:0.95rem;
+  opacity:0.65;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
 #content{
   display:none;
+  position:relative;
+  z-index:2;
   padding:40px 20px;
   max-width:700px;
   margin:0 auto;
@@ -40,29 +72,49 @@ p{
   line-height:1.8;
   margin-bottom:16px;
 }
+
+/* 磨砂输入框，适配Safari */
 input{
-  padding:12px 16px;
-  font-size:18px;
-  border-radius:8px;
-  border:none;
+  padding:14px 18px;
+  font-size:20px;
+  border-radius:14px;
+  border: 1px solid rgba(255,255,255,0.18);
   outline:none;
+  width:240px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color:#fff;
+  text-align:center;
 }
+input::placeholder{
+  color:rgba(255,255,255,0.5);
+}
+
 button{
-  padding:12px 24px;
+  padding:14px 36px;
   font-size:18px;
   border:none;
-  border-radius:8px;
-  background:#ff88aa;
+  border-radius:14px;
+  background: linear-gradient(135deg,#ff88aa,#ff6699);
   color:white;
   cursor:pointer;
+  transition: all 0.22s ease;
+}
+button:active{
+  transform: scale(0.96);
+}
+button:hover{
+  opacity:0.92;
 }
 </style>
 </head>
 <body>
 <div id="password-box">
-  <p>请输入密码解锁这份礼物</p>
-  <input type="password" id="pwd" placeholder="输入密码">
-  <button onclick="checkPwd()">打开</button>
+  <div class="tip-main">有些心里话，想只讲给你听</div>
+  <div class="tip-sub">Forever love for Wayne</div>
+  <input type="password" id="pwd" placeholder="输入密码" inputmode="numeric">
+  <button onclick="checkPwd()">开启礼物</button>
 </div>
 <div id="content">
   <h1>🎂 生日快乐，宝贝</h1>
@@ -95,6 +147,10 @@ function checkPwd(){
     document.getElementById('pwd').value = "";
   }
 }
+// 回车键盘直接提交（苹果手机键盘return键）
+document.getElementById('pwd').addEventListener('keydown',function(e){
+  if(e.key === 'Enter') checkPwd();
+})
 </script>
 </body>
 </html>
