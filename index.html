@@ -9,7 +9,6 @@
 body{
   min-height:100vh;
   background:#1a1025;
-  /* 如果你把合照上传到github，命名bg.jpg，直接写 bg.jpg */
   background-image:url('bg.jpg');
   background-size:cover;
   background-position:center;
@@ -57,12 +56,6 @@ button{
   color:white;
   cursor:pointer;
 }
-/* 新增播放按钮样式 */
-#playBtn{
-  margin:20px auto;
-  display:block;
-  background:#ffb6c8;
-}
 </style>
 </head>
 <body>
@@ -78,29 +71,29 @@ button{
   <p>愿你永远开心，平安顺遂，想要的都慢慢实现。</p>
   <p>往后的日子，我会一直在你身边。</p>
   <p>——你亲爱的搓澡巾</p>
-  <!-- 新增BGM播放按钮 -->
-  <button id="playBtn" onclick="playAudio()">🎵 点击播放背景音乐</button>
 </div>
 <audio id="bgm" loop>
-  <!-- 上传mp3到github，命名bgm.mp3，直接写bgm.mp3 -->
   <source src="bgm.mp3" type="audio/mpeg">
 
 <script>
 // 密码
 const PASS = "717";
 const audio = document.getElementById('bgm');
+
 function checkPwd(){
   let val = document.getElementById('pwd').value;
   if(val === PASS){
     document.getElementById('password-box').style.display="none";
     document.getElementById('content').style.display="block";
+    // 在按钮点击手势内播放音频，兼容iPhone Safari
+    audio.play().catch(err=>{
+      console.log("音频播放异常：",err);
+    });
   }else{
     alert("密码不对，再试试~");
+    //输错密码清空输入框
+    document.getElementById('pwd').value = "";
   }
-}
-// 新增播放函数
-function playAudio(){
-  audio.play();
 }
 </script>
 </body>
