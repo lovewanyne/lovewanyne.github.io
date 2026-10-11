@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>18岁生日快乐!!!!</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui, sans-serif;}
+body{
+  min-height:100vh;
+  background:#1a1025;
+  /* 如果你把合照上传到github，命名bg.jpg，直接写 bg.jpg */
+  background-image:url('bg.jpg');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  color:#fff;
+}
+#password-box{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+}
+#content{
+  display:none;
+  padding:40px 20px;
+  max-width:700px;
+  margin:0 auto;
+}
+h1{
+  font-size:2.4rem;
+  margin-bottom:24px;
+  color:#ffd6e0;
+  text-align:center;
+}
+p{
+  font-size:1.1rem;
+  line-height:1.8;
+  margin-bottom:16px;
+}
+input{
+  padding:12px 16px;
+  font-size:18px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+}
+button{
+  padding:12px 24px;
+  font-size:18px;
+  border:none;
+  border-radius:8px;
+  background:#ff88aa;
+  color:white;
+  cursor:pointer;
+}
+/* 新增播放按钮样式 */
+#playBtn{
+  margin:20px auto;
+  display:block;
+  background:#ffb6c8;
+}
+</style>
+</head>
+<body>
+<div id="password-box">
+  <p>请输入密码解锁这份礼物</p>
+  <input type="password" id="pwd" placeholder="输入密码">
+  <button onclick="checkPwd()">打开</button>
+</div>
+<div id="content">
+  <h1>🎂 生日快乐，宝贝</h1>
+  <p>时间过得好快，又陪你度过一年。</p>
+  <p>很多话当面不好说，写在这里送给你。</p>
+  <p>愿你永远开心，平安顺遂，想要的都慢慢实现。</p>
+  <p>往后的日子，我会一直在你身边。</p>
+  <p>——你亲爱的搓澡巾</p>
+  <!-- 新增BGM播放按钮 -->
+  <button id="playBtn" onclick="playAudio()">🎵 点击播放背景音乐</button>
+</div>
+<audio id="bgm" loop>
+  <!-- 上传mp3到github，命名bgm.mp3，直接写bgm.mp3 -->
+  <source src="bgm.mp3" type="audio/mpeg">
+
+<script>
+// 密码
+const PASS = "717";
+const audio = document.getElementById('bgm');
+function checkPwd(){
+  let val = document.getElementById('pwd').value;
+  if(val === PASS){
+    document.getElementById('password-box').style.display="none";
+    document.getElementById('content').style.display="block";
+  }else{
+    alert("密码不对，再试试~");
+  }
+}
+// 新增播放函数
+function playAudio(){
+  audio.play();
+}
+</script>
+</body>
+</html>
