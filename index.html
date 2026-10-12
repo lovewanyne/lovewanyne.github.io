@@ -5,37 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>穿睡衣18岁生日快乐!!!!</title>
 <style>
+/* 全局重置 */
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
   font-family:system-ui, sans-serif;
-  /* 禁止长按选中复制 */
   -webkit-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent; /* 移除手机点击灰色蒙版 */
+  -webkit-tap-highlight-color: transparent;
 }
 body{
   min-height:100vh;
   overflow:hidden;
 }
-/* 闪烁动画定义，慢速柔和 */
-@keyframes twinkle {
-  0% { opacity:0.2; }
-  50% { opacity:1; }
-  100% { opacity:0.2; }
-}
-/* ========== 第一页：密码开启礼物页【星空背景】 ========== */
-#password-page{
-  min-height:100vh;
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  color:#fff;
-  text-align:center;
-  padding:24px;
+
+/* 公共星空背景【抽离，复用给两个页面，消除重复代码】 */
+.star-bg{
   background-color:#0b122b;
   background-image:
     radial-gradient(2px 2px at 25px 40px, #ffffff, transparent),
@@ -50,7 +36,42 @@ body{
     radial-gradient(2px 2px at 260px 260px, #9cf, transparent);
   background-size:350px 350px;
 }
-/*密码页顶部标题，放在红圈区域*/
+
+/* 动画定义 */
+@keyframes twinkle {
+  0% { opacity:0.2; }
+  50% { opacity:1; }
+  100% { opacity:0.2; }
+}
+/* 密码输入错误抖动动画 */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+/* ========== 密码解锁页面 ========== */
+#password-page{
+  min-height:100vh;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  color:#fff;
+  text-align:center;
+  padding:24px;
+  position:relative;
+  opacity:1;
+  transition: opacity 0.8s ease-out;
+}
+#password-page.fade-out{
+  opacity:0;
+  pointer-events:none;
+}
+
 .password-header{
   position:absolute;
   top:12%;
@@ -72,6 +93,7 @@ body{
   letter-spacing:4px;
   color:#bcd3ff;
 }
+
 .gift-card{
   width:100%;
   max-width:340px;
@@ -81,6 +103,10 @@ body{
   padding:28px 24px;
   backdrop-filter:blur(10px);
   box-shadow:0 10px 40px rgba(0,0,0,0.35);
+  transition: transform 0.2s;
+}
+.gift-card.shake{
+  animation: shake 0.4s ease;
 }
 .gift-icon{
   font-size:48px;
@@ -95,7 +121,8 @@ body{
   color:#bcd3ff;
   margin-bottom:24px;
 }
-/*输入框单独恢复允许选中文字，不然没法输入密码*/
+
+/* 输入框单独恢复文字选中 */
 #password-input{
   width:100%;
   padding:14px 18px;
@@ -113,6 +140,8 @@ body{
 #password-input::placeholder{
   color:rgba(255,255,255,0.5);
 }
+
+/* 开启按钮 + 移动端按压类 */
 #open-gift-btn{
   width:100%;
   padding:16px;
@@ -127,7 +156,6 @@ body{
   box-shadow:0 8px 24px rgba(255,61,127,0.45);
   transition: all 0.18s ease;
 }
-/* 移动端按压样式 */
 #open-gift-btn:active{
   transform:scale(0.96) translateY(2px);
   box-shadow:0 4px 12px rgba(255,61,127,0.3);
@@ -138,49 +166,34 @@ body{
   box-shadow:0 4px 12px rgba(255,61,127,0.3) !important;
   background:linear-gradient(135deg,#ff5588,#ff2b6f) !important;
 }
+
 #err-tip{
   display:none;
   margin-top:14px;
   font-size:13px;
   color:#ff9999;
 }
-/* ========== 第二页：空白星空祝福页 +淡入动画 ========== */
+
+/* ========== 解锁后星空页面 ========== */
 #starry-page{
-  display:none;
-  min-height:100vh;
-  width:100%;
-  position:relative;
+  position:fixed;
+  inset:0;
   color:#fff;
   text-align:center;
   padding:24px;
-  background-color:#0b122b;
-  background-image:
-    radial-gradient(2px 2px at 25px 40px, #ffffff, transparent),
-    radial-gradient(1px 1px at 60px 90px, #ffffff, transparent),
-    radial-gradient(2px 2px at 110px 50px, #cfe0ff, transparent),
-    radial-gradient(1px 1px at 160px 100px, #ffffff, transparent),
-    radial-gradient(2px 2px at 210px 140px, #b4d1ff, transparent),
-    radial-gradient(1px 1px at 270px 60px, #ffffff, transparent),
-    radial-gradient(1px 1px at 310px 180px, #d1e5ff, transparent),
-    radial-gradient(2px 2px at 80px 200px, #ffffff, transparent),
-    radial-gradient(1px 1px at 190px 220px, #bcd, transparent),
-    radial-gradient(2px 2px at 260px 260px, #9cf, transparent);
-  background-size:350px 350px;
   opacity:0;
+  pointer-events:none;
   transition:opacity 1s ease-in-out;
-}
-#starry-page.show{
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
+}
+#starry-page.show{
   opacity:1;
+  pointer-events:auto;
 }
-/* 隐藏音乐按钮 */
-audio{
-  display:none;
-}
-/* 闪烁星星容器 */
+
+/* 星星闪烁层 */
 .star-layer{
   position:absolute;
   inset:0;
@@ -192,10 +205,13 @@ audio{
   border-radius:50%;
   animation: twinkle 7s ease-in-out infinite;
 }
+audio{
+  display:none;
+}
 </style>
 </head>
 <body>
-<!-- 星星闪烁层 -->
+<!-- 全局闪烁星星层 -->
 <div class="star-layer">
   <div class="star" style="width:2px;height:2px;top:8%;left:12%;animation-delay:0s"></div>
   <div class="star" style="width:1px;height:1px;top:17%;left:85%;animation-delay:1.2s"></div>
@@ -209,9 +225,8 @@ audio{
   <div class="star" style="width:2px;height:2px;top:72%;left:52%;animation-delay:0.4s"></div>
 </div>
 
-<!-- 第一页：输入密码开启礼物 -->
-<div id="password-page">
-  <!--红圈位置 生日标题-->
+<!-- 密码页 -->
+<div id="password-page" class="star-bg">
   <div class="password-header">
     <h1 class="page-title">18岁生日快乐!!!!</h1>
     <p class="page-subtitle">HAPPY BIRTHDAY</p>
@@ -225,59 +240,96 @@ audio{
     <p id="err-tip">密码错误，请重新输入</p>
   </div>
 </div>
-<!-- 第二页：空白星空页（无文字） -->
-<div id="starry-page">
+
+<!-- 解锁星空页 -->
+<div id="starry-page" class="star-bg">
   <audio id="bgMusic" preload="auto">
     <source src="bgm.mp3" type="audio/mpeg">
   
 </div>
+
 <script>
-const passwordInput = document.getElementById("password-input");
-const openGiftBtn = document.getElementById("open-gift-btn");
-const errTip = document.getElementById("err-tip");
-const passwordPage = document.getElementById("password-page");
-const starryPage = document.getElementById("starry-page");
-const bgMusic = document.getElementById("bgMusic");
-// 密码固定717
-const correctPwd = "717";
+// ========== 配置常量（统一放顶部，方便以后修改） ==========
+const CONFIG = {
+  correctPassword: "717",
+  fadeTime: 800
+};
 
-// 修复移动端按钮按压效果（Safari的:active缺陷，用touch事件）
-openGiftBtn.addEventListener('touchstart', function(){
-  this.classList.add('btn-press');
-})
-openGiftBtn.addEventListener('touchend', function(){
-  this.classList.remove('btn-press');
-})
-openGiftBtn.addEventListener('touchcancel', function(){
-  this.classList.remove('btn-press');
-})
+// ========== DOM一次性缓存，避免重复查询DOM ==========
+const el = {
+  passwordInput: document.getElementById("password-input"),
+  openBtn: document.getElementById("open-gift-btn"),
+  errTip: document.getElementById("err-tip"),
+  pagePwd: document.getElementById("password-page"),
+  pageStarry: document.getElementById("starry-page"),
+  giftCard: document.querySelector(".gift-card"),
+  bgMusic: document.getElementById("bgMusic")
+};
 
-function openGift(){
-  const val = passwordInput.value.trim();
-  if(val === correctPwd){
-    // 密码正确，星空淡入
-    passwordPage.style.display = "none";
-    starryPage.classList.add("show");
-    // 尝试播放音乐，Safari需要点击触发
-    bgMusic.currentTime = 0;
-    bgMusic.play().catch(() => {
-      starryPage.addEventListener("click", () => {
-        bgMusic.play();
-      }, { once: true });
+// ========== 函数定义 ==========
+/**
+ * 密码成功，页面转场动画
+ */
+function handlePasswordSuccess(){
+  el.pagePwd.classList.add("fade-out");
+  // 等待密码页淡出动画结束，再显示星空页
+  setTimeout(()=>{
+    el.pageStarry.classList.add("show");
+    el.bgMusic.currentTime = 0;
+    el.bgMusic.play().catch(()=>{
+      el.pageStarry.addEventListener("click", ()=>{
+        el.bgMusic.play();
+      }, { once:true });
     });
+  }, CONFIG.fadeTime);
+}
+
+/**
+ * 密码失败，抖动+提示
+ */
+function handlePasswordFail(){
+  el.errTip.style.display = "block";
+  el.giftCard.classList.add("shake");
+  el.passwordInput.value = "";
+  el.passwordInput.focus();
+  // 清除抖动class，保证下次可再次触发
+  setTimeout(()=> el.giftCard.classList.remove("shake"),400);
+}
+
+/**
+ * 校验密码
+ */
+function checkPassword(){
+  const inputVal = el.passwordInput.value.trim();
+  if(inputVal === CONFIG.correctPassword){
+    handlePasswordSuccess();
   }else{
-    // 密码错误：提示清空
-    errTip.style.display = "block";
-    passwordInput.value = "";
-    passwordInput.focus();
+    handlePasswordFail();
   }
 }
-openGiftBtn.onclick = openGift;
-passwordInput.addEventListener("keydown", (e) => {
-  if(e.key === "Enter"){
-    openGift();
-  }
-});
+
+/**
+ * 按钮触摸按压（移动端Safari）
+ */
+function bindTouchEffect(){
+  el.openBtn.addEventListener('touchstart', ()=> el.openBtn.classList.add('btn-press'));
+  el.openBtn.addEventListener('touchend', ()=> el.openBtn.classList.remove('btn-press'));
+  el.openBtn.addEventListener('touchcancel', ()=> el.openBtn.classList.remove('btn-press'));
+}
+
+/**
+ * 绑定所有事件
+ */
+function bindEvents(){
+  el.openBtn.onclick = checkPassword;
+  el.passwordInput.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter") checkPassword();
+  });
+  bindTouchEffect();
+}
+
+// 初始化
+bindEvents();
 </script>
 </body>
 </html>
