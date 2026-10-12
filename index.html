@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>18岁生日快乐!!!!</title>
 <style>
-/* 全局重置 */
 *{
   margin:0;
   padding:0;
@@ -20,7 +19,7 @@ body{
   overflow:hidden;
 }
 
-/* 公共星空背景【抽离，复用给两个页面】 */
+/* 公共星空背景 */
 .star-bg{
   background-color:#0b1022;
   background-image:
@@ -43,7 +42,6 @@ body{
   50% { opacity:1; }
   100% { opacity:0.2; }
 }
-/* 密码输入错误抖动动画 */
 @keyframes shake {
   0%,100% { transform: translateX(0); }
   20% { transform: translateX(-6px); }
@@ -52,7 +50,17 @@ body{
   80% { transform: translateX(6px); }
 }
 
-/* ========== 解锁后星空页面【底层，一直存在】 ========== */
+/* 烟花画布 */
+#fireworks-canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:3;
+}
+
+/* 底层星空页面 */
 #starry-page{
   position:fixed;
   inset:0;
@@ -70,7 +78,7 @@ body{
   pointer-events:auto;
 }
 
-/* ========== 密码解锁页面【上层浮层，慢慢消失】 ========== */
+/* 上层密码页面：整块慢慢消失 */
 #password-page{
   min-height:100vh;
   width:100%;
@@ -142,7 +150,6 @@ body{
   margin-bottom:28px;
 }
 
-/* 输入框单独恢复文字选中 */
 #password-input{
   width:100%;
   padding:16px 18px;
@@ -161,7 +168,6 @@ body{
   color:rgba(255,255,255,0.45);
 }
 
-/* 开启礼物按钮 + 移动端按压类 */
 #open-gift-btn{
   width:100%;
   padding:18px;
@@ -212,6 +218,10 @@ audio{
 </style>
 </head>
 <body>
+
+<!-- 烟花画布 -->
+<canvas id="fireworks-canvas"></canvas>
+
 <!-- 全局闪烁星星层 -->
 <div class="star-layer">
   <div class="star" style="width:2px;height:2px;top:8%;left:12%;animation-delay:0s"></div>
@@ -230,10 +240,10 @@ audio{
 <div id="starry-page" class="star-bg">
   <audio id="bgMusic" preload="auto">
     <source src="bgm.mp3" type="audio/mpeg">
-  
+  </audio>
 </div>
 
-<!-- 上层密码弹窗页面（这一整块慢慢消失） -->
+<!-- 上层密码页面 -->
 <div id="password-page" class="star-bg">
   <div class="password-header">
     <h1 class="page-title">18岁生日快乐!!!!</h1>
@@ -256,7 +266,7 @@ const CONFIG = {
   fadeTime: 1000
 };
 
-// ========== DOM一次性缓存 ==========
+// ========== DOM缓存 ==========
 const el = {
   passwordInput: document.getElementById("password-input"),
   openBtn: document.getElementById("open-gift-btn"),
@@ -264,13 +274,184 @@ const el = {
   pagePwd: document.getElementById("password-page"),
   pageStarry: document.getElementById("starry-page"),
   giftCard: document.querySelector(".gift-card"),
-  bgMusic: document.getElementById("bgMusic")
+  bgMusic: document.getElementById("bgMusic"),
+  canvas: document.getElementById("fireworks-canvas")
 };
 
-// ========== 函数定义 ==========
-/**
- * 密码成功：上层密码页面整体慢慢淡出消失，底层星空一直都在，不会闪白
- */
+// ========== 烟花系统 ==========
+const ctx = el.canvas.getContext("2d");
+let particles = [];
+let fireworks = [];
+let canvasWidth, canvasHeight;
+
+function resizeCanvas(){
+  canvasWidth = window.innerWidth;
+  canvasHeight = window.innerHeight;
+  el.canvas.width = canvasWidth;
+  el.canvas.height = canvasHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+// 随机颜色
+function randomColor(){
+  const colors = ["#ffd166","#ff9aa2","#b5ead7","#c7ceea","#ffb3ba","#8ef1ff","#ffd6e0"];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// 四叶草形状烟花
+function createClover(x, y){
+  const size = Math.min(canvasWidth, canvasHeight);
+  const count = 16;          // 粒子数量，不大
+  const spread = size * 0.04; // 炸开范围，小一点
+  const color = randomColor();
+
+  // 四叶草四个方向叶片
+  const leaves = [
+    { angle: 0,   radius: spread },
+    { angle: 90,  radius: spread },
+    { angle: 180, radius: spread },
+    { angle: 270, radius: spread }
+  ];
+
+  leaves.forEach(leaf => {
+    for(let i = 0; i < 4; i++){
+      const offset = (Math.random() - 0.5) * spread * 0.5;
+      const a = (leaf.angle + offset * 4) * Math.PI / 180;
+      const r = Math.max(10, leaf.radius + offset);
+
+      particles.push({
+        x: x,
+        y: y,
+        vx: Math.cos(a) * r * 0.06,
+        vy: Math.sin(a) * r * 0.06,
+        life: 1,
+        decay: 0.012 + Math.random() * 0.008,
+        size: 2 + Math.random() * 1.2,
+        color: color
+      });
+    }
+  });
+
+  // 中心亮点
+  for(let i = 0; i < 4; i++){
+    particles.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 1.2,
+      vy: (Math.random() - 0.5) * 1.2,
+      life: 1,
+      decay: 0.02,
+      size: 2.5,
+      color: "#ffffff"
+    });
+  }
+}
+
+// 发射烟花
+function launchFirework(targetX, targetY){
+  const startX = canvasWidth / 2 + (Math.random() - 0.5) * 40;
+  const startY = canvasHeight;
+
+  fireworks.push({
+    x: startX,
+    y: startY,
+    targetX: targetX,
+    targetY: targetY,
+    speed: 4 + Math.random() * 0.6,
+    trail: []
+  });
+}
+
+// 更新烟花
+function updateFireworks(){
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  // 画拖尾
+  for(let i = fireworks.length - 1; i >= 0; i--){
+    const f = fireworks[i];
+    const dx = f.targetX - f.x;
+    const dy = f.targetY - f.y;
+    const dist = Math.hypot(dx, dy);
+
+    f.trail.push({ x: f.x, y: f.y });
+    if(f.trail.length > 10) f.trail.shift();
+
+    f.x += dx * 0.045;
+    f.y += dy * 0.045;
+
+    // 画飞行轨迹
+    for(let t = 0; t < f.trail.length; t++){
+      const p = f.trail[t];
+      const alpha = t / f.trail.length;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.4 * alpha, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 230, 150, ${alpha})`;
+      ctx.fill();
+    }
+
+    // 到达目标点，炸开四叶草
+    if(dist < 6){
+      createClover(f.targetX, f.targetY);
+      fireworks.splice(i, 1);
+    }
+  }
+
+  // 更新粒子
+  for(let i = particles.length - 1; i >= 0; i--){
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.004;
+    p.vx *= 0.986;
+    p.vy *= 0.986;
+    p.life -= p.decay;
+
+    if(p.life <= 0){
+      particles.splice(i, 1);
+      continue;
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  requestAnimationFrame(updateFireworks);
+}
+updateFireworks();
+
+// 点击空白区域发射烟花
+function handleStarryClick(e){
+  // 如果密码页还没消失，不触发烟花
+  if(!el.pageStarry.classList.contains("show")) return;
+
+  // 点击位置
+  const x = e.clientX || (e.touches && e.touches[0].clientX);
+  const y = e.clientY || (e.touches && e.touches[0].clientY);
+
+  if(x === undefined || y === undefined) return;
+
+  // 点击密码区域不触发，避免误触
+  if(el.pagePwd && !el.pagePwd.classList.contains("fade-out")){
+    const rect = el.pagePwd.getBoundingClientRect();
+    if(x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) return;
+  }
+
+  launchFirework(x, y);
+}
+
+el.pageStarry.addEventListener("click", handleStarryClick);
+el.pageStarry.addEventListener("touchstart", (e)=>{
+  if(e.touches && e.touches.length > 0){
+    handleStarryClick(e.touches[0]);
+  }
+}, { passive: true });
+
+// ========== 密码逻辑 ==========
 function handlePasswordSuccess(){
   el.pagePwd.classList.add("fade-out");
   el.pageStarry.classList.add("show");
@@ -283,9 +464,6 @@ function handlePasswordSuccess(){
   });
 }
 
-/**
- * 密码失败，抖动+提示
- */
 function handlePasswordFail(){
   el.errTip.style.display = "block";
   el.giftCard.classList.add("shake");
@@ -294,9 +472,6 @@ function handlePasswordFail(){
   setTimeout(()=> el.giftCard.classList.remove("shake"),400);
 }
 
-/**
- * 校验密码
- */
 function checkPassword(){
   const inputVal = el.passwordInput.value.trim();
   if(inputVal === CONFIG.correctPassword){
@@ -306,18 +481,12 @@ function checkPassword(){
   }
 }
 
-/**
- * 按钮触摸按压（移动端Safari）
- */
 function bindTouchEffect(){
   el.openBtn.addEventListener('touchstart', ()=> el.openBtn.classList.add('btn-press'));
   el.openBtn.addEventListener('touchend', ()=> el.openBtn.classList.remove('btn-press'));
   el.openBtn.addEventListener('touchcancel', ()=> el.openBtn.classList.remove('btn-press'));
 }
 
-/**
- * 绑定所有事件
- */
 function bindEvents(){
   el.openBtn.onclick = checkPassword;
   el.passwordInput.addEventListener("keydown", (e)=>{
@@ -326,7 +495,6 @@ function bindEvents(){
   bindTouchEffect();
 }
 
-// 初始化
 bindEvents();
 </script>
 </body>
