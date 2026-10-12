@@ -3,99 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>18岁生日快乐!!!!</title>
+<title>穿睡衣18岁生日快乐!!!!</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui, sans-serif;}
-/* 封面页：你的情侣合照背景（P1界面） */
-#card-page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  background:#1a1025;
-  background-image:url('bg.jpg');
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
-  color:#fff;
-  padding:20px;
-}
-#card-page h2{
-  font-size:26px;
-  margin-bottom:12px;
-  font-weight:500;
-}
-#card-page p{
-  font-size:16px;
-  letter-spacing:1px;
-  margin-bottom:40px;
-  opacity:0.9;
-}
-#card-btn{
-  padding:16px 60px;
-  border:none;
-  border-radius:999px;
-  background:#ff6699;
-  color:white;
-  font-size:20px;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui, sans-serif;
 }
 
-/* 密码输入页面 独立背景 */
-#password-box{
-  display:none;
+body{
   min-height:100vh;
-  flex-direction:column;
+  overflow:hidden;
+}
+
+/* ========== 第一页：密码开启礼物页 ========== */
+#password-page{
+  min-height:100vh;
+  width:100%;
+  display:flex;
   align-items:center;
   justify-content:center;
+  flex-direction:column;
+  color:#fff;
+  text-align:center;
+  padding:24px;
+
   background: linear-gradient(135deg, #191638, #22204b);
-  color:#fff;
-  padding:20px;
 }
-#password-box h2{
-  font-size:28px;
-  margin-bottom:14px;
-}
-#password-box .tip-text{
-  font-size:16px;
-  margin-bottom:32px;
-  opacity:0.85;
-}
-#password-input{
-  width:85%;
+
+.gift-card{
+  width:100%;
   max-width:340px;
-  padding:16px 20px;
-  font-size:18px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.3);
-  background:rgba(255,255,255,0.1);
-  color:#fff;
-  outline:none;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:24px;
+  padding:28px 24px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 40px rgba(0,0,0,0.35);
+}
+
+.gift-icon{
+  font-size:48px;
+  margin-bottom:16px;
+}
+
+.gift-title{
+  font-size:20px;
+  margin-bottom:8px;
+}
+
+.gift-tip{
+  font-size:14px;
+  color:#bcd3ff;
   margin-bottom:24px;
 }
-#submit-btn{
-  padding:16px 60px;
+
+#password-input{
+  width:100%;
+  padding:14px 18px;
+  font-size:16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.12);
+  color:#fff;
+  outline:none;
+  text-align:center;
+  margin-bottom:16px;
+}
+
+#password-input::placeholder{
+  color:rgba(255,255,255,0.5);
+}
+
+#open-gift-btn{
+  width:100%;
+  padding:16px;
   border:none;
   border-radius:999px;
-  background:#ff6699;
-  color:white;
-  font-size:20px;
+  background:linear-gradient(135deg,#ff6699,#ff3d7f);
+  color:#fff;
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:1px;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(255,61,127,0.45);
 }
+
+#open-gift-btn:active{
+  transform:scale(0.97);
+}
+
 #err-tip{
   display:none;
-  margin-top:20px;
+  margin-top:14px;
+  font-size:13px;
   color:#ff9999;
 }
 
-/* ✅ 密码成功后【像素星空页面，P2同款效果】 */
-#main-page{
+/* ========== 第二页：空白星空祝福页 ========== */
+#starry-page{
   display:none;
   min-height:100vh;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  /* CSS生成像素星空，不用图片 */
+  width:100%;
+  position:relative;
+  color:#fff;
+  text-align:center;
+  padding:24px;
+
   background-color:#0b122b;
   background-image:
     radial-gradient(2px 2px at 25px 40px, #ffffff, transparent),
@@ -104,110 +119,107 @@
     radial-gradient(1px 1px at 160px 100px, #ffffff, transparent),
     radial-gradient(2px 2px at 210px 140px, #b4d1ff, transparent),
     radial-gradient(1px 1px at 270px 60px, #ffffff, transparent),
-    radial-gradient(1px 1px at 310px 180px, #d1e5ff, transparent);
+    radial-gradient(1px 1px at 310px 180px, #d1e5ff, transparent),
+    radial-gradient(2px 2px at 80px 200px, #ffffff, transparent),
+    radial-gradient(1px 1px at 190px 220px, #bcd, transparent),
+    radial-gradient(2px 2px at 260px 260px, #9cf, transparent);
   background-size:350px 350px;
-  color:#fff;
-  text-align:center;
 }
-.birthday-title {
-  font-size:34px;
+
+.page-title{
+  font-size:28px;
   letter-spacing:2px;
-  color:#fff;
-  /* 文字发光效果，和P2一致 */
+  margin-top:40px;
+  margin-bottom:10px;
   text-shadow:
-    0 0 8px rgba(255, 255, 255, 0.8),
-    0 0 22px rgba(170, 200, 255, 0.6);
-  margin-bottom:12px;
+    0 0 8px rgba(255,255,255,0.8),
+    0 0 22px rgba(170,200,255,0.6);
 }
-.birthday-subtitle{
-  font-size:16px;
+
+.page-subtitle{
+  font-size:14px;
   letter-spacing:4px;
   color:#bcd3ff;
-  margin-bottom:40px;
+  margin-bottom:30px;
 }
-#audioBtn{
-  padding:14px 40px;
-  border:none;
-  border-radius:999px;
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  font-size:17px;
-  border:1px solid rgba(255,255,255,0.3);
+
+/* 隐藏音乐按钮 */
+audio{
+  display:none;
 }
 </style>
 </head>
+
 <body>
-<!-- 1.封面页（合照背景，P1） -->
-<div id="card-page">
-  <h2>有些心里话，想只讲给你听</h2>
-  <p>Forever love for Wayne</p>
-  <button id="card-btn">开启礼物</button>
+
+<!-- 第一页：输入密码开启礼物 -->
+<div id="password-page">
+  <div class="gift-card">
+    <div class="gift-icon">🎁</div>
+    <div class="gift-title">输入密码开启礼物</div>
+    <div class="gift-tip">只有你能打开这份惊喜</div>
+
+    <input id="password-input" type="password" placeholder="请输入密码">
+    <button id="open-gift-btn">开启礼物</button>
+
+    <p id="err-tip">密码错误，请重新输入</p>
+  </div>
 </div>
 
-<!-- 2.密码输入页面 -->
-<div id="password-box">
-  <h2>请输入密码</h2>
-  <p class="tip-text">解锁这份专属惊喜</p>
-  <input id="password-input" type="password" placeholder="输入密码">
-  <button id="submit-btn">确认解锁</button>
-  <p id="err-tip">密码错误，请重新输入</p>
-</div>
+<!-- 第二页：空白星空页 -->
+<div id="starry-page">
+  <h1 class="page-title">18岁生日快乐!!!!</h1>
+  <p class="page-subtitle">HAPPY BIRTHDAY</p>
 
-<!--3.密码正确：星空祝福页 P2效果 -->
-<div id="main-page">
-  <h1 class="birthday-title">穿睡衣生日快乐!!!</h1>
-  <p class="birthday-subtitle">HAPPY BIRTHDAY</p>
-  <button id="audioBtn">点击播放音乐</button>
   <audio id="bgMusic" preload="auto">
     <source src="bgm.mp3" type="audio/mpeg">
-  
+  </audio>
 </div>
 
 <script>
-const cardPage = document.getElementById("card-page");
-const pwdBox = document.getElementById("password-box");
-const mainPage = document.getElementById("main-page");
-const cardBtn = document.getElementById("card-btn");
-const submitBtn = document.getElementById("submit-btn");
-const pwdInput = document.getElementById("password-input");
+const passwordInput = document.getElementById("password-input");
+const openGiftBtn = document.getElementById("open-gift-btn");
 const errTip = document.getElementById("err-tip");
-const audioBtn = document.getElementById("audioBtn");
+const passwordPage = document.getElementById("password-page");
+const starryPage = document.getElementById("starry-page");
 const bgMusic = document.getElementById("bgMusic");
 
-// =========在这里修改你的密码=========
-const correctPwd = "717"; 
+// 在这里修改密码
+const correctPwd = "717";
 
-// 点击开启礼物，跳转到密码页
-cardBtn.onclick = () => {
-  cardPage.style.display = "none";
-  pwdBox.style.display = "flex";
-};
+function openGift(){
+  const val = passwordInput.value.trim();
 
-// 密码校验函数
-function checkPwd(){
-  const val = pwdInput.value.trim();
   if(val === correctPwd){
-    pwdBox.style.display = "none";
-    mainPage.style.display = "flex";
+    // 密码正确：跳转到空白星空页
+    passwordPage.style.display = "none";
+    starryPage.style.display = "block";
+
+    // 进入星空页后自动播放音乐
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch(() => {
+      // 如果 Safari 阻止自动播放，用户再点一次屏幕即可
+      starryPage.addEventListener("click", () => {
+        bgMusic.play();
+      }, { once: true });
+    });
+
   }else{
+    // 密码错误：提示并清空
     errTip.style.display = "block";
-    pwdInput.value = ""; //输错清空输入框
+    passwordInput.value = "";
+    passwordInput.focus();
   }
 }
-submitBtn.onclick = checkPwd;
-pwdInput.onkeydown = (e)=>{
-  if(e.key === "Enter") checkPwd();
-}
-//Safari需要手动点击播放音频
-audioBtn.onclick = ()=>{
-  bgMusic.play();
-}
-//页面初始化
-window.onload = ()=>{
-  cardPage.style.display = "flex";
-  pwdBox.style.display = "none";
-  mainPage.style.display = "none";
-}
+
+openGiftBtn.onclick = openGift;
+
+passwordInput.addEventListener("keydown", (e) => {
+  if(e.key === "Enter"){
+    openGift();
+  }
+});
 </script>
+
 </body>
 </html>
