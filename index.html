@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>穿睡衣18岁生日快乐!!!!</title>
 <style>
 *{
@@ -10,6 +10,10 @@
   padding:0;
   box-sizing:border-box;
   font-family:system-ui, sans-serif;
+  /* 禁止长按选中复制 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent; /* 移除手机点击灰色蒙版 */
 }
 body{
   min-height:100vh;
@@ -91,6 +95,7 @@ body{
   color:#bcd3ff;
   margin-bottom:24px;
 }
+/*输入框单独恢复允许选中文字，不然没法输入密码*/
 #password-input{
   width:100%;
   padding:14px 18px;
@@ -102,6 +107,8 @@ body{
   outline:none;
   text-align:center;
   margin-bottom:16px;
+  -webkit-user-select: text !important;
+  user-select: text !important;
 }
 #password-input::placeholder{
   color:rgba(255,255,255,0.5);
@@ -120,11 +127,16 @@ body{
   box-shadow:0 8px 24px rgba(255,61,127,0.45);
   transition: all 0.18s ease;
 }
-/* 按钮按下交互效果 */
+/* 移动端按压样式 */
 #open-gift-btn:active{
   transform:scale(0.96) translateY(2px);
   box-shadow:0 4px 12px rgba(255,61,127,0.3);
   background:linear-gradient(135deg,#ff5588,#ff2b6f);
+}
+.btn-press{
+  transform:scale(0.96) translateY(2px) !important;
+  box-shadow:0 4px 12px rgba(255,61,127,0.3) !important;
+  background:linear-gradient(135deg,#ff5588,#ff2b6f) !important;
 }
 #err-tip{
   display:none;
@@ -228,6 +240,18 @@ const starryPage = document.getElementById("starry-page");
 const bgMusic = document.getElementById("bgMusic");
 // 密码固定717
 const correctPwd = "717";
+
+// 修复移动端按钮按压效果（Safari的:active缺陷，用touch事件）
+openGiftBtn.addEventListener('touchstart', function(){
+  this.classList.add('btn-press');
+})
+openGiftBtn.addEventListener('touchend', function(){
+  this.classList.remove('btn-press');
+})
+openGiftBtn.addEventListener('touchcancel', function(){
+  this.classList.remove('btn-press');
+})
+
 function openGift(){
   const val = passwordInput.value.trim();
   if(val === correctPwd){
