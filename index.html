@@ -15,6 +15,12 @@ body{
   min-height:100vh;
   overflow:hidden;
 }
+/* 闪烁动画定义，慢速柔和 */
+@keyframes twinkle {
+  0% { opacity:0.2; }
+  50% { opacity:1; }
+  100% { opacity:0.2; }
+}
 /* ========== 第一页：密码开启礼物页【星空背景】 ========== */
 #password-page{
   min-height:100vh;
@@ -112,9 +118,13 @@ body{
   letter-spacing:1px;
   cursor:pointer;
   box-shadow:0 8px 24px rgba(255,61,127,0.45);
+  transition: all 0.18s ease;
 }
+/* 按钮按下交互效果 */
 #open-gift-btn:active{
-  transform:scale(0.97);
+  transform:scale(0.96) translateY(2px);
+  box-shadow:0 4px 12px rgba(255,61,127,0.3);
+  background:linear-gradient(135deg,#ff5588,#ff2b6f);
 }
 #err-tip{
   display:none;
@@ -158,9 +168,35 @@ body{
 audio{
   display:none;
 }
+/* 闪烁星星容器 */
+.star-layer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.star{
+  position:absolute;
+  background:#fff;
+  border-radius:50%;
+  animation: twinkle 7s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
+<!-- 星星闪烁层 -->
+<div class="star-layer">
+  <div class="star" style="width:2px;height:2px;top:8%;left:12%;animation-delay:0s"></div>
+  <div class="star" style="width:1px;height:1px;top:17%;left:85%;animation-delay:1.2s"></div>
+  <div class="star" style="width:2px;height:2px;top:32%;left:7%;animation-delay:2.1s"></div>
+  <div class="star" style="width:1px;height:1px;top:44%;left:92%;animation-delay:0.7s"></div>
+  <div class="star" style="width:2px;height:2px;top:58%;left:16%;animation-delay:3.3s"></div>
+  <div class="star" style="width:1px;height:1px;top:66%;left:80%;animation-delay:1.8s"></div>
+  <div class="star" style="width:2px;height:2px;top:79%;left:6%;animation-delay:4.2s"></div>
+  <div class="star" style="width:1px;height:1px;top:86%;left:88%;animation-delay:2.6s"></div>
+  <div class="star" style="width:1px;height:1px;top:24%;left:45%;animation-delay:5.1s"></div>
+  <div class="star" style="width:2px;height:2px;top:72%;left:52%;animation-delay:0.4s"></div>
+</div>
+
 <!-- 第一页：输入密码开启礼物 -->
 <div id="password-page">
   <!--红圈位置 生日标题-->
@@ -168,7 +204,6 @@ audio{
     <h1 class="page-title">18岁生日快乐!!!!</h1>
     <p class="page-subtitle">HAPPY BIRTHDAY</p>
   </div>
-
   <div class="gift-card">
     <div class="gift-icon">🎁</div>
     <div class="gift-title">输入密码开启礼物</div>
@@ -178,14 +213,12 @@ audio{
     <p id="err-tip">密码错误，请重新输入</p>
   </div>
 </div>
-
 <!-- 第二页：空白星空页（无文字） -->
 <div id="starry-page">
   <audio id="bgMusic" preload="auto">
     <source src="bgm.mp3" type="audio/mpeg">
   
 </div>
-
 <script>
 const passwordInput = document.getElementById("password-input");
 const openGiftBtn = document.getElementById("open-gift-btn");
